@@ -5,7 +5,7 @@ export const env = {
   port: process.env.PORT || 8000,
   nodeEnv: process.env.NODE_ENV || "development",
   jwtSecret: process.env.JWT_SECRET_KEY || "secret",
-  jwtRefreshSecret:process.env.JWT_REFRESH_KEY || "refresh",
+  jwtRefreshSecret: process.env.REFRESH_SECRET_KEY || process.env.JWT_REFRESH_KEY || "refresh",
   db: {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

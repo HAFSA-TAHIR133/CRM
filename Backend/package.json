@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "db:migrate": "sequelize-cli db:migrate --config src/config/config.js --migrations-path src/migrations --models-path src/models"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +38,7 @@
     "express-rate-limit": "^8.5.2",
     "helmet": "^8.2.0",
     "joi": "^18.2.3",
+    "multer": "^2.2.0",
     "mysql2": "^3.22.5"
   }
 }

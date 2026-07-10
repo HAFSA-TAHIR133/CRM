@@ -2,6 +2,27 @@ import db from '../models/index.js';
 
 class LeadService {
   async createLead(data) {
+    if (!data.pipelineId || !data.stageId) {
+      const pipeline = await db.Pipeline.findOne({
+        include: [{
+          model: db.Stage,
+          as: 'stages',
+          separate: true,
+          order: [['order', 'ASC']]
+        }],
+        order: [['createdAt', 'ASC']]
+      });
+
+      if (pipeline) {
+        data.pipelineId = data.pipelineId || pipeline.id;
+        const firstStage = pipeline.stages?.[0] || await db.Stage.findOne({
+          where: { pipelineId: pipeline.id },
+          order: [['order', 'ASC']]
+        });
+        data.stageId = data.stageId || firstStage?.id;
+      }
+    }
+
     return await db.Lead.create(data);
   }
 
@@ -47,6 +68,27 @@ class LeadService {
     if (!lead) throw new Error('Lead not found');
     await lead.destroy();
     return true;
+  }
+
+  // lead and activity
+  async assignLeadToUser(leadId, userId, assigningUserId) {
+    const lead = await db.Lead.findByPk(leadId);
+    if (!lead) {
+      throw new Error('Lead not found');
+    }
+
+    // Update the assignment
+    await lead.update({ assignedTo: userId });
+
+    // Create the history audit trail log
+    await db.Activity.create({
+      leadId: lead.id,
+      userId: assigningUserId,
+      action: 'Lead Assigned',
+      description: `Assigned to User ID: ${userId}`
+    });
+
+    return lead;
   }
 }
 

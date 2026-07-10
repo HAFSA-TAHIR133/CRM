@@ -4,30 +4,28 @@ import { LoginForm } from "@/pages/login/login-form";
 export default function LoginPage() {
   return (
     <div 
-      className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 bg-cover bg-center relative antialiased"
+      className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 bg-cover bg-center relative antialiased select-none"
       style={{ 
-        // Using the same scenic nature backdrop image for a matching experience
         backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80')` 
       }}
     >
-      {/* Ambient overlay tint mask */}
-      <div className="absolute inset-0 bg-teal-950/20 backdrop-brightness-[0.85]"></div>
+      {/* Dark Ambient Overlay Tint Mask */}
+      <div className="absolute inset-0 bg-teal-950/25 backdrop-brightness-[0.80] backdrop-blur-[2px]"></div>
 
-      {/* Changed max-w-sm to max-w-[420px] to prevent compression bugs */}
-      <div className="relative z-10 flex w-full max-w-[420px] flex-col gap-4">
+      {/* Outer Card Constraint Box */}
+      <div className="relative z-10 flex w-full max-w-[420px] flex-col gap-3">
         
-        {/* CRM System Branding Header with the recommended Users icon */}
-        <a 
-          href="/" 
-          className="flex items-center gap-3 self-center font-bold text-white tracking-wide mb-2"
-        >
-          <div className="flex size-9 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 shadow-sm">
-            <Users className="size-5" />
+        {/* System Branding Header */}
+        <div className="flex flex-col items-center gap-2 self-center mb-2 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 shadow-xl">
+            <Users className="size-5 stroke-[2.5]" />
           </div>
-          <span className="uppercase tracking-widest text-xl text-white text-center">Welcome To CRM System</span>
-        </a>
+          <span className="uppercase tracking-widest text-xs font-black text-white/90 text-center mt-1">
+            CRM Portal Gateway
+          </span>
+        </div>
 
-        {/* Login Form card wrapper */}
+        {/* Core Draggable/Droppable Configured Login Card */}
         <LoginForm />
       </div>
     </div>

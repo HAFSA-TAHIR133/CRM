@@ -30,7 +30,13 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.ENUM('admin', 'user'), 
         defaultValue: 'user' 
       },
-      avatar: { type: DataTypes.STRING }
+      status: {
+        type: DataTypes.ENUM('Active', 'Inactive'),
+        defaultValue: 'Active'
+      },
+      avatar: { type: DataTypes.STRING },
+      resetToken: { type: DataTypes.STRING, allowNull: true },
+      resetTokenExpiry: { type: DataTypes.DATE, allowNull: true }
     }, 
     {
       sequelize,

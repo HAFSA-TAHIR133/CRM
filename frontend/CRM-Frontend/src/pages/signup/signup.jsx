@@ -1,38 +1,29 @@
-// SignupPage.jsx
-import { GalleryVerticalEnd,Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { SignupForm } from "@/pages/signup/signup-form";
 
 export default function SignupPage() {
   return (
     <div 
-      className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 bg-cover bg-center relative antialiased"
+      className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 bg-cover bg-center relative antialiased select-none"
       style={{ 
-        // A rich, foggy teal mountain landscape to match your reference image perfectly
         backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80')` 
       }}
     >
-      {/* Dark overlay mask to increase card visibility and contrast */}
-      <div className="absolute inset-0 bg-teal-950/20 backdrop-brightness-[0.85]"></div>
+      {/* Dark Ambient Overlay Tint Mask */}
+      <div className="absolute inset-0 bg-teal-950/25 backdrop-brightness-[0.80] backdrop-blur-[2px]"></div>
 
-      {/* Main Content Wrapper */}
-      <div className="relative z-10 flex w-full max-w-[420px] flex-col gap-4">
+      {/* Main Content Constraint Wrapper */}
+      <div className="relative z-10 flex w-full max-w-[420px] flex-col gap-3">
 
-        {/* Logo / Brand */}
-        <a href="/" className="flex items-center gap-2 self-center font-bold text-white tracking-wide text-sm drop-shadow-sm mb-2">
-          <div className="flex size-7 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md border border-white/20 text-white">
-            <Users className="size-4" />
+        {/* System Branding Header */}
+        <div className="flex flex-col items-center gap-2 self-center mb-2 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 shadow-xl">
+            <Users className="size-5 stroke-[2.5]" />
           </div>
-
-          {/* image icon */}
-          {/* <img 
-            src="/path-to-your-logo.png" 
-            alt="Logo" 
-            className="w-8 h-8 object-contain" 
-          /> */}
-
-
-          <span className="uppercase tracking-widest text-xl text-center">Welcome To CRM System</span>
-        </a>
+          <span className="uppercase tracking-widest text-xs font-black text-white/90 text-center mt-1">
+            CRM Portal Gateway
+          </span>
+        </div>
 
         {/* Signup Form */}
         <SignupForm />

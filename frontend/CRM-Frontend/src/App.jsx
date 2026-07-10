@@ -1,16 +1,14 @@
-import './App.css'
-import './index.css'
+// src/App.jsx
+import React from 'react';
 import AppRoutes from './routes/appRoutes';
-import { Toaster } from "sonner";
+import { Toaster } from 'sonner';
 function App() {
-
   return (
     <>
       <AppRoutes />
-      <Toaster richColors position="top-center" />
-      
-    </>
-  )
-};
+      <Toaster position="top-right" />
+      </>
+      );
+}
 
-export default App
+export default App;

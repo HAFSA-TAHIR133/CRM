@@ -14,7 +14,11 @@ export default (sequelize,DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    deviceInfo: {           // e.g., "Chrome on Windows"
+    refreshToken: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    deviceInfo: {
       type: DataTypes.STRING,
       allowNull: true
     },

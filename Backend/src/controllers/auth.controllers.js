@@ -14,7 +14,9 @@ class AuthController{
         message: SuccessCodesMeta.CREATED.message,
         data: result
       });
+
     } catch (error) {
+      console.error(error);
       // Fallback check if it's an existing user error
       const isExistError = error.message.includes('exists');
       const errorMeta = isExistError ? ErrorCodesMeta.USER_ALREADY_EXISTS : ErrorCodesMeta.BAD_REQUEST;
@@ -60,7 +62,7 @@ class AuthController{
   async refresh(req, res) {
     try {
       const { refreshToken } = req.body;
-      const result = await authService.refreshToken(refreshToken);
+      const result = await AuthenticateServices.refreshToken(refreshToken);
 
       res.status(200).json({
         success: true,
@@ -73,6 +75,26 @@ class AuthController{
         code: ErrorCodesMeta.UNAUTHORIZED.code,
         message: error.message || ErrorCodesMeta.UNAUTHORIZED.message
       });
+    }
+  }
+
+  async forgotPassword(req, res) {
+    try {
+      const { email } = req.body;
+      const result = await AuthenticateServices.forgotPassword(email);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  async resetPassword(req, res) {
+    try {
+      const { token, password } = req.body;
+      const result = await AuthenticateServices.resetPassword(token, password);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
     }
   }
 };

@@ -18,8 +18,9 @@ export default (sequelize, DataTypes) => {
   Stage.init(
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      pipelineId: { type: DataTypes.INTEGER, allowNull: false },
       name: { type: DataTypes.STRING, allowNull: false },
-      order: { type: DataTypes.INTEGER, defaultValue: 0 }, // for sorting columns in Kanban
+      order: { type: DataTypes.INTEGER, defaultValue: 0 },
       color: { type: DataTypes.STRING, defaultValue: '#3b82f6' }
     }, 
     {

@@ -23,7 +23,9 @@ export default (sequelize, DataTypes) => {
       name: { type: DataTypes.STRING, allowNull: false },
       dueDate: { type: DataTypes.DATE },
       priority: { type: DataTypes.ENUM('low', 'medium', 'high'), defaultValue: 'medium' },
-      status: { type: DataTypes.ENUM('pending', 'completed', 'overdue'), defaultValue: 'pending' }
+      status: { type: DataTypes.ENUM('pending', 'completed', 'overdue'), defaultValue: 'pending' },
+      assignedTo: { type: DataTypes.INTEGER, allowNull: true },
+      leadId: { type: DataTypes.INTEGER, allowNull: true }
     }, 
     {
       sequelize,

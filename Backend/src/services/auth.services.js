@@ -1,9 +1,8 @@
 import db from '../models/index.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken'; // Added missing jwt import
-import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
-import { env } from '../config/env.js';
-import { randomUUID } from "crypto";
+import jwt from 'jsonwebtoken';
+import crypto, { randomUUID } from "crypto";
+import {generateAccessToken,generateRefreshToken} from '../utils/jwt.js';
 
 class AuthenticateServices {
   // 1. REGISTER
@@ -67,7 +66,7 @@ class AuthenticateServices {
     // Verify token validity
     let decoded;
     try {
-      decoded = jwt.verify(oldRefreshToken, env.jwtSecret); // Using secret from your env config
+      decoded = jwt.verify(oldRefreshToken, env.jwtRefreshSecret);
     } catch (err) {
       throw new Error('Invalid or expired refresh token');
     }
@@ -100,12 +99,54 @@ class AuthenticateServices {
 
   // 4. LOGOUT FROM ALL DEVICES
   async logoutFromAllDevices(userId) {
-    // Delete all active session entries for this user
     await db.Session.destroy({
       where: { userId }
     });
     
     return { success: true, message: 'Logged out successfully from all devices.' };
+  }
+
+  async forgotPassword(email) {
+    const user = await db.User.findOne({ where: { email } });
+    if (!user) {
+      return { success: true, message: 'If that email exists, a reset link has been sent.' };
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+
+    await user.update({ resetToken, resetTokenExpiry });
+
+    return {
+      success: true,
+      message: 'If that email exists, a reset link has been sent.',
+      resetToken,
+      resetUrl: `/reset-password?token=${resetToken}`
+    };
+  }
+
+  async resetPassword(token, newPassword) {
+    const user = await db.User.findOne({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: { [db.Sequelize.Op.gt]: new Date() }
+      }
+    });
+
+    if (!user) {
+      throw new Error('Invalid or expired reset token');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await user.update({
+      password: hashedPassword,
+      resetToken: null,
+      resetTokenExpiry: null
+    });
+
+    return { success: true, message: 'Password reset successfully' };
   }
 }
 

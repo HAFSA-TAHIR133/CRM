@@ -1,171 +1,159 @@
-import { AppSidebar } from "@/pages/dashboard/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+// src/pages/Dashboard.jsx
+import React, { useState, useEffect } from 'react';
+import api from '@/lib/axios';           // Use your configured axios
+import { toast } from 'sonner';
+import { Users, TrendingUp, AlertTriangle } from 'lucide-react';
 
-// Imports from your specific CRM dashboard content
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, DollarSign, Target, Clock, TrendingUp } from "lucide-react";
+// Safe helper function to parse localStorage items without crashing the app
+const getStoredItem = (key, field, fallback) => {
+  try {
+    const data = localStorage.getItem(key);
+    if (!data) return fallback;
+    
+    // If it looks like a JSON object string, parse it
+    if (data.startsWith('{') || data.startsWith('[')) {
+      const parsed = JSON.parse(data);
+      return parsed[field] || fallback;
+    }
+    
+    // If it's a plain string and we are asking for fields like 'name' or 'role', 
+    // handle fallback or direct return depending on matching key configurations
+    return data || fallback;
+  } catch (err) {
+    console.error(`Error parsing localStorage key "${key}":`, err);
+    return fallback;
+  }
+};
 
 export default function Dashboard() {
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className="bg-slate-50/50">
-        
-        {/* Top Header Navigation Strip */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/60 bg-white/80 backdrop-blur-md transition-[width,height] ease-linear sticky top-0 z-50 px-4">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1 text-slate-500 hover:text-slate-900 transition-colors" />
-            <Separator
-              orientation="vertical"
-              className="mx-2 h-4 bg-slate-200"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#" className="text-slate-500 hover:text-teal-700 font-medium text-xs tracking-wide transition-colors">
-                    CRM
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block text-slate-400" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-teal-950 font-semibold text-xs tracking-wide">
-                    Dashboard
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-        {/* Main Dashboard Content View */}
-        <div className="flex flex-1 flex-col gap-6 p-6">
-          
-          {/* Welcome Dashboard Title Block */}
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-teal-950">
-              Dashboard
-            </h1>
-            <p className="text-slate-500 text-sm mt-0.5">
-              Real-time snapshot of your pipeline performance metrics.
-            </p>
-          </div>
-          
-          {/* Your CRM Stat Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* CARD 1: Total Leads */}
-            <Card className="border border-slate-200/80 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 p-5">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Total Leads
-                </CardTitle>
-                <div className="flex p-2 rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100/80">
-                  <Users className="h-4 w-4 stroke-[2.5]" />
-                </div>
-              </CardHeader>
-              <CardContent className="px-5 pb-5 pt-0">
-                <div className="text-3xl font-black text-slate-900 tracking-tight">248</div>
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-1.5 bg-emerald-50/60 w-fit px-2 py-0.5 rounded-md border border-emerald-100">
-                  <TrendingUp className="h-3 w-3 shrink-0" />
-                  <span>+12 from last month</span>
-                </div>
-              </CardContent>
-            </Card>
+  // Dynamic values parsed safely
+  const userName = getStoredItem('user', 'name', 'User');
+  const userRole = getStoredItem('user', 'role', 'user');
 
-            {/* CARD 2: Pipeline Value */}
-            <Card className="border border-slate-200/80 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 p-5">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Pipeline Value
-                </CardTitle>
-                <div className="flex p-2 rounded-xl bg-teal-50 text-teal-600 transition-colors group-hover:bg-teal-100/80">
-                  <DollarSign className="h-4 w-4 stroke-[2.5]" />
-                </div>
-              </CardHeader>
-              <CardContent className="px-5 pb-5 pt-0">
-                <div className="text-3xl font-black text-slate-900 tracking-tight">$1.24M</div>
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-1.5 bg-emerald-50/60 w-fit px-2 py-0.5 rounded-md border border-emerald-100">
-                  <TrendingUp className="h-3 w-3 shrink-0" />
-                  <span>+8.2% from last month</span>
-                </div>
-              </CardContent>
-            </Card>
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const res = await api.get('/dashboard/metrics');
 
-            {/* CARD 3: Conversion Rate */}
-            <Card className="border border-slate-200/80 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 p-5">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Conversion Rate
-                </CardTitle>
-                <div className="flex p-2 rounded-xl bg-amber-50 text-amber-600 transition-colors group-hover:bg-amber-100/80">
-                  <Target className="h-4 w-4 stroke-[2.5]" />
-                </div>
-              </CardHeader>
-              <CardContent className="px-5 pb-5 pt-0">
-                <div className="text-3xl font-black text-slate-900 tracking-tight">64.2%</div>
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-1.5 bg-emerald-50/60 w-fit px-2 py-0.5 rounded-md border border-emerald-100">
-                  <TrendingUp className="h-3 w-3 shrink-0" />
-                  <span>+2.4% from last month</span>
-                </div>
-              </CardContent>
-            </Card>
+        const data = res.data?.success ? res.data.data : res.data;
+        setMetrics(data);
+      } catch (err) {
+        console.error("Dashboard fetch error:", err);
+        toast.error("Could not load dashboard metrics");
+        setError("Failed to load metrics. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-            {/* CARD 4: Avg. Deal Cycle */}
-            <Card className="border border-slate-200/80 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 p-5">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Avg. Deal Cycle
-                </CardTitle>
-                <div className="flex p-2 rounded-xl bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-100/80">
-                  <Clock className="h-4 w-4 stroke-[2.5]" />
-                </div>
-              </CardHeader>
-              <CardContent className="px-5 pb-5 pt-0">
-                <div className="text-3xl font-black text-slate-900 tracking-tight">14 Days</div>
-                <div className="flex items-center text-[11px] font-semibold text-slate-500 mt-1.5 bg-slate-100/80 w-fit px-2 py-0.5 rounded-md border border-slate-200/40">
-                  Steady with last month
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+    fetchDashboardData();
+  }, []);
 
-          {/* Secondary row for components, tables, or pipelines logs */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            {/* Left Blueprint Component Box */}
-            <div className="min-h-[340px] rounded-2xl border border-dashed border-slate-300 bg-white/50 p-6 flex flex-col items-center justify-center text-center shadow-sm transition-all hover:bg-white">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3 border border-slate-200/40">
-                <Users className="h-5 w-5" />
-              </div>
-              <p className="font-semibold text-sm text-teal-950">Recent Leads View</p>
-              <p className="text-xs text-slate-400 max-w-xs mt-1">Component data feed placeholder. Your real-time activity metrics will populate here.</p>
-            </div>
-            
-            {/* Right Blueprint Component Box */}
-            <div className="min-h-[340px] rounded-2xl border border-dashed border-slate-300 bg-white/50 p-6 flex flex-col items-center justify-center text-center shadow-sm transition-all hover:bg-white">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3 border border-slate-200/40">
-                <Clock className="h-5 w-5" />
-              </div>
-              <p className="font-semibold text-sm text-teal-950">Upcoming Tasks View</p>
-              <p className="text-xs text-slate-400 max-w-xs mt-1">Component data feed placeholder. Your schedule events timeline will populate here.</p>
-            </div>
-
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center bg-[#f4f7f6]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-[#b2d8d8] border-t-[#008080] rounded-full animate-spin"></div>
+          <div className="text-sm font-medium text-[#006666]/70 tracking-wide animate-pulse">
+            Loading workspace metrics...
           </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center bg-[#f4f7f6] p-8">
+        <div className="max-w-md w-full bg-white border border-red-100 rounded-2xl p-6 text-center shadow-xl shadow-red-950/5">
+          <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-6 h-6" />
+          </div>
+          <p className="text-red-600 font-semibold text-lg mb-1">Data Error</p>
+          <p className="text-slate-500 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const m = metrics || {
+    totalLeads: 0,
+    pipelineValue: '$0',
+    overdueTasks: 0,
+  };
+
+  return (
+    <div className="min-h-full space-y-10 p-1 md:p-4 text-slate-800 animate-in fade-in duration-300">
+      
+      {/* Top Greeting Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200/60 pb-6">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-[#004c4c]">Dashboard</h1>
+          <p className="text-slate-500 mt-1.5 text-sm font-medium">
+            Welcome back, <span className="font-bold text-[#004c4c]">{userName}</span> 
+            <span className="mx-2 text-slate-300">•</span>
+            {/* <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wider bg-[#b2d8d8]/30 text-[#006666]">
+              {userRole}
+            </span> */}
+          </p>
+        </div>
+        
+        <div className="self-start md:self-auto bg-white border border-slate-200 shadow-sm rounded-xl px-4 py-2 text-xs font-semibold text-slate-500 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+          Live Analytics
+        </div>
+      </div>
+
+      {/* Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Total Leads Card */}
+        <div className="bg-white border border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-2px] shadow-[0_8px_30px_rgb(0,76,76,0.03)] hover:shadow-[0_8px_30px_rgb(0,76,76,0.06)] flex flex-col justify-between group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Leads</span>
+            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#b2d8d8]/20 group-hover:text-[#008080] transition-colors">
+              <Users className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-4xl font-black tracking-tight text-[#004c4c]">{m.totalLeads}</div>
+            <p className="text-xs text-slate-400 font-medium mt-1">Active items inside CRM</p>
+          </div>
+        </div>
+
+        {/* Pipeline Value Card */}
+        <div className="bg-white border border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-2px] shadow-[0_8px_30px_rgb(0,76,76,0.03)] hover:shadow-[0_8px_30px_rgb(0,76,76,0.06)] flex flex-col justify-between group border-t-4 border-t-[#008080]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Pipeline Value</span>
+            <div className="w-10 h-10 rounded-xl bg-[#b2d8d8]/20 flex items-center justify-center text-[#008080]">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-4xl font-black tracking-tight text-[#008080]">{m.pipelineValue}</div>
+            <p className="text-xs text-[#66b2b2] font-semibold mt-1">Forecasted pipeline volume</p>
+          </div>
+        </div>
+
+        {/* Overdue Tasks Card */}
+        <div className="bg-white border border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-2px] shadow-[0_8px_30px_rgb(0,76,76,0.03)] hover:shadow-[0_8px_30px_rgb(0,76,76,0.06)] flex flex-col justify-between group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Overdue Tasks</span>
+            <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 group-hover:bg-rose-100 transition-colors">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-4xl font-black tracking-tight text-rose-600">{m.overdueTasks}</div>
+            <p className="text-xs text-rose-400 font-medium mt-1">Requires immediate attention</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 }

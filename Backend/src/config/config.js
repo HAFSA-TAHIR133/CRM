@@ -2,30 +2,32 @@ import 'dotenv/config';
 
 const config = {
   development: {
-    username:'postgres',
+    username: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'my_password',
-    database: "CRM",
-    host: '127.0.0.1',
-    port:  5432,
-    dialect: 'postgres',
+    database: process.env.DB_NAME || 'CRM',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    dialect: process.env.DB_DIALECT || 'postgres',
     seederStorage: "sequelize",
     seederStorageTableName: "SequelizeSeeders"
   },
   test: {
-    username: 'postgres',
+    username: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'my_password',
-    database: 'CRM',
-    host: '127.0.0.1',
-    dialect: 'postgres',
+    database: process.env.DB_NAME || 'CRM',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    dialect: process.env.DB_DIALECT || 'postgres',
     seederStorage: "sequelize",           
     seederStorageTableName: "SequelizeSeeders"
   },
   production: {
-    username: 'postgres',
+    username: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'my_password',
-    database: 'CRM',
-    host: '127.0.0.1',
-    dialect: 'postgres',
+    database: process.env.DB_NAME || 'CRM',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    dialect: process.env.DB_DIALECT || 'postgres',
     seederStorage: "sequelize",
     seederStorageTableName: "SequelizeSeeders"
   }

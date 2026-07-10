@@ -1,7 +1,7 @@
 'use strict';
 
 export const up = async (queryInterface, Sequelize) => {
-  // Create the new enum type
+  // Create the new enum
   await queryInterface.sequelize.query(`
     CREATE TYPE "enum_Leads_status_new" AS ENUM (
       'new',
@@ -13,7 +13,13 @@ export const up = async (queryInterface, Sequelize) => {
     );
   `);
 
-  // Change the column to use the new enum
+  // Remove the old default
+  await queryInterface.sequelize.query(`
+    ALTER TABLE "Leads"
+    ALTER COLUMN "status" DROP DEFAULT;
+  `);
+
+  // Convert the column
   await queryInterface.sequelize.query(`
     ALTER TABLE "Leads"
     ALTER COLUMN "status"
@@ -22,17 +28,24 @@ export const up = async (queryInterface, Sequelize) => {
       CASE
         WHEN status::text = 'open' THEN 'new'::"enum_Leads_status_new"
         WHEN status::text = 'closed' THEN 'won'::"enum_Leads_status_new"
-        ELSE 'new'::"enum_Leads_status_new" -- Fallback case to prevent errors if column is NOT NULL
+        ELSE 'new'::"enum_Leads_status_new"
       END
     );
   `);
 
-  // Remove old enum
+  // Set the new default
+  await queryInterface.sequelize.query(`
+    ALTER TABLE "Leads"
+    ALTER COLUMN "status"
+    SET DEFAULT 'new';
+  `);
+
+  // Drop old enum
   await queryInterface.sequelize.query(`
     DROP TYPE "enum_Leads_status";
   `);
 
-  // Rename new enum to the original name
+  // Rename new enum
   await queryInterface.sequelize.query(`
     ALTER TYPE "enum_Leads_status_new"
     RENAME TO "enum_Leads_status";

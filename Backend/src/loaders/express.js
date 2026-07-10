@@ -1,7 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 import routes from '../routes/index.js'; 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const expressLoader = async ({ app }) => {
   // 1. Enable Cross-Origin Resource Sharing (CORS)
@@ -13,6 +18,9 @@ app.use(cors({
   // 2. Built-in Express middleware for parsing json and urlencoded data
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+  app.use('/uploads/avatars', express.static(path.join(__dirname, '../../uploads/avatars')));
 
   // 3. Basic Security: Rate Limiting to prevent brute-force attacks
   const limiter = rateLimit({

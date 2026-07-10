@@ -4,11 +4,6 @@ import { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
   class Lead extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Lead.belongsTo(models.User, { foreignKey: 'assignedTo', as: 'assignedUser' });
       Lead.belongsTo(models.Pipeline, { foreignKey: 'pipelineId', as: 'pipeline' });
@@ -27,17 +22,13 @@ export default (sequelize, DataTypes) => {
       leadSource: { type: DataTypes.STRING },
       expectedValue: { type: DataTypes.DECIMAL(10, 2) },
       status: {
-  type: DataTypes.ENUM(
-    'new',
-    'contacted',
-    'qualified',
-    'proposal',
-    'won',
-    'lost'
-  ),
-  defaultValue: 'new'
-},
-      outcome: { type: DataTypes.ENUM('win', 'lose', null), defaultValue: null }
+        type: DataTypes.ENUM('open', 'closed'),
+        defaultValue: 'open'
+      },
+      outcome: { type: DataTypes.ENUM('won', 'lost'), allowNull: true },
+      assignedTo: { type: DataTypes.INTEGER, allowNull: true },
+      pipelineId: { type: DataTypes.INTEGER, allowNull: true },
+      stageId: { type: DataTypes.INTEGER, allowNull: true }
     }, 
     {
       sequelize,

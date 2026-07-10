@@ -33,7 +33,6 @@ export function SignupForm(props) {
 
   const onSubmit = async (data) => {
     setLoading(true);
-
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/auth/signup",
@@ -44,10 +43,10 @@ export function SignupForm(props) {
         }
       );
 
-      toast.success(res.data.message,{ position: "top-center" });   
+      toast.success(res.data.message || "Account created successfully!", { position: "top-center" });   
       setTimeout(() => {
         navigate("/login");
-      }, 3000);
+      }, 2000);
 
     } catch (error) {
       toast.error(
@@ -67,7 +66,6 @@ export function SignupForm(props) {
         <CardTitle className="text-xl font-bold uppercase tracking-widest text-white">
           Sign Up
         </CardTitle>
-
         <CardDescription className="text-white/60 text-xs">
           Create your account to access the system
         </CardDescription>
@@ -75,7 +73,7 @@ export function SignupForm(props) {
 
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-          <FieldGroup className="flex flex-col gap-4 w-full">
+          <FieldGroup className="flex flex-col gap-3.5 w-full">
 
             {/* Name */}
             <Field className="flex flex-col gap-1 w-full">
@@ -83,7 +81,7 @@ export function SignupForm(props) {
                 id="name"
                 type="text"
                 placeholder="username / full name"
-                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-white/15 transition-all text-sm"
+                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-slate-900/40 transition-colors text-sm"
                 {...register("name", {
                   required: "Name is required",
                   minLength: {
@@ -92,9 +90,8 @@ export function SignupForm(props) {
                   },
                 })}
               />
-
               {errors.name && (
-                <p className="text-xs font-medium text-rose-300 px-3">
+                <p className="text-xs font-semibold text-rose-300 px-4 mt-0.5">
                   {errors.name.message}
                 </p>
               )}
@@ -106,19 +103,17 @@ export function SignupForm(props) {
                 id="email"
                 type="email"
                 placeholder="email address"
-                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-white/15 transition-all text-sm"
+                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-slate-900/40 transition-colors text-sm"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
-                    value:
-                      /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                    value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
                     message: "Please enter a valid email",
                   },
                 })}
               />
-
               {errors.email && (
-                <p className="text-xs font-medium text-rose-300 px-3">
+                <p className="text-xs font-semibold text-rose-300 px-4 mt-0.5">
                   {errors.email.message}
                 </p>
               )}
@@ -130,7 +125,7 @@ export function SignupForm(props) {
                 id="password"
                 type="password"
                 placeholder="password"
-                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-white/15 transition-all text-sm"
+                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-slate-900/40 transition-colors text-sm"
                 {...register("password", {
                   required: "Password is required",
                   minLength: {
@@ -139,9 +134,8 @@ export function SignupForm(props) {
                   },
                 })}
               />
-
               {errors.password && (
-                <p className="text-xs font-medium text-rose-300 px-3">
+                <p className="text-xs font-semibold text-rose-300 px-4 mt-0.5">
                   {errors.password.message}
                 </p>
               )}
@@ -153,29 +147,33 @@ export function SignupForm(props) {
                 id="confirmPassword"
                 type="password"
                 placeholder="confirm password"
-                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-white/15 transition-all text-sm"
+                className="w-full h-12 px-5 bg-white/10 border-white/20 rounded-full text-white placeholder:text-white/40 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:bg-slate-900/40 transition-colors text-sm"
                 {...register("confirmPassword", {
                   required: "Please confirm your password",
                   validate: (value) =>
                     value === password || "Passwords do not match",
                 })}
               />
-
               {errors.confirmPassword && (
-                <p className="text-xs font-medium text-rose-300 px-3">
+                <p className="text-xs font-semibold text-rose-300 px-4 mt-0.5">
                   {errors.confirmPassword.message}
                 </p>
               )}
             </Field>
 
-            {/* Buttons */}
+            {/* Action Buttons Group */}
             <FieldGroup className="pt-2 flex flex-col gap-3 w-full">
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-white hover:bg-white/90 text-slate-900 font-extrabold uppercase tracking-wider rounded-full transition-all text-sm shadow-md"
+                className="w-full h-12 bg-white hover:bg-white/90 text-slate-900 font-extrabold uppercase tracking-wider rounded-full shadow-md active:scale-[0.99] transition-all text-sm"
               >
-                {loading ? "Creating Account..." : "Sign Up"}
+                {loading ? (
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-4 h-4 border-2 border-slate-400 border-t-slate-900 rounded-full animate-spin"></div>
+                    <span>Creating Account...</span>
+                  </div>
+                ) : "Sign Up"}
               </Button>
 
               <Button
@@ -190,7 +188,7 @@ export function SignupForm(props) {
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="font-bold text-white hover:underline underline-offset-4"
+                  className="font-bold text-teal-300 hover:text-teal-200 hover:underline underline-offset-4 transition-colors ml-0.5"
                 >
                   Sign in
                 </Link>
