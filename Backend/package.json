@@ -33,6 +33,7 @@
     "sequelize-cli": "^6.6.5"
   },
   "dependencies": {
+    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "crypto": "^1.0.1",
     "express-rate-limit": "^8.5.2",

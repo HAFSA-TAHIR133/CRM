@@ -65,7 +65,7 @@ export function NavProjects({ projects = [] }) {
                   </Link>
                 </SidebarMenuButton>
                 
-                {/* ⚙️ Context Action Ellipsis Icon */}
+                {/*  Context Action Ellipsis Icon */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuAction 

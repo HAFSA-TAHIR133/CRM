@@ -1,3 +1,4 @@
+// src/pages/dashboard/components/nav-user.jsx
 import { useRef, useState } from "react";
 import { LogOut, Camera, ChevronDown, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,15 +41,27 @@ export function NavUser({ user, onAvatarUpdate }) {
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append("avatar", file);
+      formData.append("avatar", file); // must match backend: upload.single('avatar')
+
+      const token = localStorage.getItem("accessToken") || localStorage.getItem("token");
+
+      // Adjust this path to your actual route:
+      // Controller: UserController.updateAvatar
+      // Route: PUT /users/profile/avatar  (or /users/:id/avatar if you prefer)
       const res = await api.put("/users/profile/avatar", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      const updatedUser = res.data.data;
+      // Adapt to your backend response shape
+      const updatedUser = res.data?.user || res.data?.data || res.data;
+
       if (onAvatarUpdate) onAvatarUpdate(updatedUser);
       toast.success("Profile picture updated");
     } catch (err) {
+      console.error(err);
       toast.error(err.response?.data?.message || "Failed to upload picture");
     } finally {
       setUploading(false);
@@ -84,8 +97,12 @@ export function NavUser({ user, onAvatarUpdate }) {
           </AvatarFallback>
         </Avatar>
         <div className="hidden sm:flex flex-col items-start text-left leading-tight">
-          <span className="text-sm font-semibold text-[#004c4c] truncate max-w-[120px]">{user?.name}</span>
-          <span className="text-[11px] text-slate-400 capitalize">{userRole}</span>
+          <span className="text-sm font-semibold text-[#004c4c] truncate max-w-[120px]">
+            {user?.name}
+          </span>
+          <span className="text-[11px] text-slate-400 capitalize">
+            {userRole}
+          </span>
         </div>
         <ChevronDown className="h-4 w-4 text-slate-400 hidden sm:block" />
       </Button>
@@ -95,7 +112,6 @@ export function NavUser({ user, onAvatarUpdate }) {
           showCloseButton={false}
           className="sm:max-w-sm rounded-2xl border border-slate-100 p-0 overflow-hidden shadow-2xl"
         >
-          {/* Custom blurred backdrop is handled by DialogOverlay — strengthen blur */}
           <div className="relative">
             <button
               onClick={() => setOpen(false)}
@@ -112,7 +128,9 @@ export function NavUser({ user, onAvatarUpdate }) {
                 </AvatarFallback>
               </Avatar>
               <DialogHeader className="mt-4 space-y-1">
-                <DialogTitle className="text-white text-lg font-bold">{user?.name}</DialogTitle>
+                <DialogTitle className="text-white text-lg font-bold">
+                  {user?.name}
+                </DialogTitle>
                 <p className="text-[#b2d8d8] text-sm">{user?.email}</p>
                 <span className="inline-block mt-1 px-3 py-0.5 rounded-full bg-white/15 text-white text-xs font-semibold capitalize">
                   {userRole}

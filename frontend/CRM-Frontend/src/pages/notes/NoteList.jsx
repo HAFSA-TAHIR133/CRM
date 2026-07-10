@@ -83,7 +83,7 @@ const NoteList = ({ leadId }) => {
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       
-      {/* 📝 Header Title */}
+      {/*  Header Title */}
       <div className="px-1">
         <h3 className="text-base font-bold flex items-center gap-2 text-[#004c4c]">
           <StickyNote className="h-4 w-4 text-[#008080]" />
@@ -92,7 +92,7 @@ const NoteList = ({ leadId }) => {
         <p className="text-[11px] font-medium text-slate-400 mt-0.5">Track interactions, attachments, and important observations.</p>
       </div>
 
-      {/* ✍️ Add Note Textarea & File Module */}
+      {/*  Add Note Textarea & File Module */}
       <div className="space-y-2 bg-slate-50/50 p-3 rounded-2xl border border-slate-100 shadow-[inset_0_2px_4px_rgba(0,0,0,0.01)]">
         <div className="flex gap-2.5 items-end">
           <Textarea
@@ -127,7 +127,7 @@ const NoteList = ({ leadId }) => {
           </div>
         </div>
 
-        {/* 📑 Queued attachment indicator */}
+        {/*  Queued attachment indicator */}
         {file && (
           <div className="flex items-center justify-between bg-white border border-[#b2d8d8]/60 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-slate-600 animate-in slide-in-from-top-1">
             <div className="flex items-center gap-1.5 truncate">
@@ -146,7 +146,7 @@ const NoteList = ({ leadId }) => {
         )}
       </div>
 
-      {/* 📋 Notes List Stack */}
+      {/*  Notes List Stack */}
       <Card className="border border-slate-200/60 bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,76,76,0.015)]">
         <CardContent className="p-4">
           {loading ? (

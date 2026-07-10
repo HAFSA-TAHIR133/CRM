@@ -32,7 +32,7 @@ const ActivityTimeline = ({ leadId }) => {
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
       
-      {/* 📊 Section Header Title */}
+      {/*  Section Header Title */}
       <div className="px-1">
         <h3 className="text-base font-bold flex items-center gap-2 text-[#004c4c]">
           <History className="h-4 w-4 text-[#008080]" />
@@ -43,7 +43,7 @@ const ActivityTimeline = ({ leadId }) => {
         </p>
       </div>
 
-      {/* 🎞️ Vertical Timeline Container Canvas */}
+      {/*  Vertical Timeline Container Canvas */}
       <Card className="border border-slate-200/60 bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,76,76,0.015)]">
         <CardContent className="p-5">
           {loading ? (
@@ -61,10 +61,10 @@ const ActivityTimeline = ({ leadId }) => {
               {activities.map((act, idx) => (
                 <div key={act.id || idx} className="relative group animate-in slide-in-from-bottom-2 duration-200">
                   
-                  {/* 📍 Active Indicator Timeline Node Pin */}
+                  {/*  Active Indicator Timeline Node Pin */}
                   <div className="absolute -left-[27px] top-1 h-3.5 w-3.5 rounded-full bg-white border-[3px] border-[#008080] shadow-sm transition-transform group-hover:scale-110 z-10" />
                   
-                  {/* 📝 Log Frame Text Block */}
+                  {/*  Log Frame Text Block */}
                   <div className="space-y-1">
                     <div className="text-xs font-bold text-slate-800 leading-none">
                       {act.action}
@@ -76,7 +76,7 @@ const ActivityTimeline = ({ leadId }) => {
                       </p>
                     )}
                     
-                    {/* 🕒 Meta Timestamp Badge & User Identification */}
+                    {/*  Meta Timestamp Badge & User Identification */}
                     <div className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-400 pt-0.5">
                       <span>
                         {new Date(act.createdAt).toLocaleString('en-US', {

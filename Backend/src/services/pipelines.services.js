@@ -46,16 +46,36 @@ class PipelineServices {
     });
   }
 
+  // async createStage(data) {
+  //   // Get the max order for this pipeline to append at the end
+  //   const maxOrder = await db.Stage.max('order', { where: { pipelineId: data.pipelineId } });
+  //   return await db.Stage.create({
+  //     name: data.name,
+  //     pipelineId: data.pipelineId,
+  //     order: (maxOrder || 0) + 1,
+  //     color: data.color || '#3b82f6'
+  //   });
+  // }
   async createStage(data) {
-    // Get the max order for this pipeline to append at the end
-    const maxOrder = await db.Stage.max('order', { where: { pipelineId: data.pipelineId } });
-    return await db.Stage.create({
-      name: data.name,
-      pipelineId: data.pipelineId,
-      order: (maxOrder || 0) + 1,
-      color: data.color || '#3b82f6'
-    });
-  }
+  const { pipelineId, name, color } = data;
+
+  // Explicitly compute max order
+  const maxOrderRow = await db.Stage.findOne({
+    where: { pipelineId },
+    attributes: [[db.sequelize.fn('MAX', db.sequelize.col('order')), 'maxOrder']],
+    raw: true,
+  });
+
+  const maxOrder = maxOrderRow?.maxOrder;
+  const newOrder = typeof maxOrder === 'number' ? maxOrder + 1 : 1;
+
+  return await db.Stage.create({
+    name,
+    pipelineId,
+    color: color || '#3b82f6',
+    order: newOrder,
+  });
+}
 
   async updateStage(id, data) {
     const stage = await db.Stage.findByPk(id);

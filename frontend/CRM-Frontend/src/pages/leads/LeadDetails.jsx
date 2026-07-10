@@ -70,7 +70,7 @@ const LeadDetails = () => {
   return (
     <div className="p-1 md:p-4 space-y-8 animate-in fade-in duration-300">
       
-      {/* 🏷️ Top Header Summary Banner */}
+      {/*  Top Header Summary Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 pb-6">
         <div className="flex items-start gap-4">
           <div className="w-14 h-14 rounded-2xl bg-[#b2d8d8]/20 flex items-center justify-center text-[#008080] shrink-0 border border-[#b2d8d8]/40">

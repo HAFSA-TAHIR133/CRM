@@ -67,7 +67,6 @@ export default function LeadKanban({ leads = [], setLeads, fetchLeads }) {
   const filteredLeads = useMemo(() => {
     if (!Array.isArray(leads)) return [];
     if (userRole === 'admin') return leads;
-    // For regular users, only show leads assigned to them
     return leads.filter(lead => 
       !lead.assignedTo || String(lead.assignedTo) === String(currentUserId)
     );
@@ -89,19 +88,16 @@ export default function LeadKanban({ leads = [], setLeads, fetchLeads }) {
     const leadId = active.id;
     const overId = over.id;
 
-    // Determine the target stage ID
     let newStageId = null;
     const overStr = String(overId);
     
     if (overStr.startsWith('stage-')) {
       newStageId = parseInt(overStr.replace('stage-', ''), 10);
     } else {
-      // Check if over is a column
       const col = columns.find(c => String(c.id) === overStr);
       if (col) {
         newStageId = col.id;
       } else {
-        // Over is a lead card - find its stage
         const overLead = filteredLeads.find(l => String(l.id) === overStr);
         newStageId = overLead ? parseInt(overLead.stageId, 10) : null;
       }
@@ -116,7 +112,6 @@ export default function LeadKanban({ leads = [], setLeads, fetchLeads }) {
       return;
     }
 
-    // Optimistic update
     const updated = leads.map(lead =>
       String(lead.id) === String(leadId) ? { ...lead, stageId: newStageId } : lead
     );
@@ -128,7 +123,7 @@ export default function LeadKanban({ leads = [], setLeads, fetchLeads }) {
       if (fetchLeads) fetchLeads();
     } catch (err) {
       toast.error("Failed to update stage");
-      if (fetchLeads) fetchLeads(); // Revert by refetching
+      if (fetchLeads) fetchLeads();
     }
   };
 
@@ -181,38 +176,43 @@ export default function LeadKanban({ leads = [], setLeads, fetchLeads }) {
         </div>
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 items-start p-1 animate-in fade-in duration-300">
+          {/* Main Grid: Forces exactly 4 columns per row on screens laptop size and larger */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-5 items-start p-1 animate-in fade-in duration-300">
             {columns.map((col) => {
               const columnLeads = getLeadsForStage(col.id);
 
               return (
                 <div
                   key={col.id}
-                  className="bg-white border border-slate-200/60 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,76,76,0.015)] flex flex-col"
+                  className="bg-white border border-slate-200/70 rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,76,76,0.01)] flex flex-col h-auto min-w-0"
                 >
-                  <div className="flex items-center justify-between mb-4 px-1">
-                    <div className="font-bold text-[#004c4c] text-sm tracking-tight flex items-center gap-2">
+                  {/* Column Header */}
+                  <div className="flex items-center justify-between mb-3 px-0.5">
+                    <div className="font-bold text-[#004c4c] text-sm tracking-tight flex items-center gap-2 truncate mr-2">
                       <span
-                        className="w-2 h-2 rounded-full"
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: col.color || '#3b82f6' }}
                       />
-                      {col.name}
+                      <span className="truncate">{col.name}</span>
                     </div>
-                    <div className="text-xs bg-[#b2d8d8]/20 border border-[#b2d8d8]/40 px-2.5 py-0.5 rounded-full font-bold text-[#006666]">
+                    <div className="text-xs bg-[#b2d8d8]/20 border border-[#b2d8d8]/40 px-2.5 py-0.5 rounded-full font-bold text-[#006666] shrink-0">
                       {columnLeads.length}
                     </div>
                   </div>
 
+                  {/* Drop Zone Area */}
                   <KanbanColumn id={`stage-${col.id}`}>
                     <SortableContext items={columnLeads.map((l) => l.id)} strategy={verticalListSortingStrategy}>
-                      <div className="space-y-3 min-h-[450px] w-full">
+                      <div className="space-y-3 min-h-[180px] w-full flex flex-col justify-start">
                         {columnLeads.length === 0 ? (
-                          <div className="flex items-center justify-center h-[200px] text-center px-4 text-xs font-semibold text-slate-400 border-2 border-dashed border-slate-100 rounded-xl bg-slate-50/50 select-none tracking-wide">
+                          <div className="flex items-center justify-center h-[120px] text-center px-4 text-xs font-semibold text-slate-400 border-2 border-dashed border-slate-100 rounded-xl bg-slate-50/40 select-none tracking-wide grow">
                             No items • Drop here
                           </div>
                         ) : (
                           columnLeads.map((lead) => (
-                            <LeadCard key={lead.id} lead={lead} />
+                            <div key={lead.id} className="w-full min-w-0 flex-shrink-0">
+                              <LeadCard lead={lead} />
+                            </div>
                           ))
                         )}
                       </div>

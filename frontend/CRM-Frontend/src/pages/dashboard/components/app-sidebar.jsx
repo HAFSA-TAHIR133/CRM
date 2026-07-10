@@ -17,7 +17,7 @@ const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home, adminOnly: false },
   { title: "Leads", url: "/leads", icon: Users, adminOnly: false },
   { title: "Tasks", url: "/tasks", icon: CheckSquare, adminOnly: false },
-  { title: "Pipeline Board", url: "/pipeline", icon: BarChart3, adminOnly: false },
+  // { title: "Pipeline Board", url: "/pipeline", icon: BarChart3, adminOnly: false },
   { title: "Pipelines", url: "/pipelines", icon: BarChart3, adminOnly: true },
   { title: "Team", url: "/users", icon: UserCog, adminOnly: true },
   { title: "Settings", url: "/settings", icon: Settings, adminOnly: true },

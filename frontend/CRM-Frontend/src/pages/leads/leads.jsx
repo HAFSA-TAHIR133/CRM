@@ -11,7 +11,7 @@ import { Plus, Edit, Trash2, LayoutGrid, List, Search, ShieldAlert, CheckSquare,
 import { toast } from 'sonner';
 import LeadKanban from "./LeadKanban"; 
 
-// 🟢 IMPORTING YOUR DEDICATED FILES FROM THE TREE
+//  IMPORTING YOUR DEDICATED FILES FROM THE TREE
 import NoteList from '../notes/NoteList';
 import CreateTaskModal from '../tasks/CreateTaskModal';
 import TaskList from '../tasks/TaskList';
@@ -181,7 +181,7 @@ const Leads = () => {
   return (
     <div className="space-y-6 w-full p-1 md:p-4 animate-in fade-in duration-300">
       
-      {/* 🏷️ HEADER BAR */}
+      {/*  HEADER BAR */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200/60 pb-5">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-[#004c4c]">Leads Management</h1>
@@ -214,7 +214,7 @@ const Leads = () => {
         </div>
       </div>
 
-      {/* 📊 RENDER MODES */}
+      {/*  RENDER MODES */}
       {viewMode === 'kanban' ? (
         <Card className="border border-slate-200/70 bg-slate-50/40 rounded-2xl p-4 shadow-[0_4px_24px_rgba(0,76,76,0.01)] overflow-x-auto">
           <LeadKanban leads={Array.isArray(leads) ? leads : []} setLeads={setLeads} fetchLeads={fetchLeads} />
@@ -318,7 +318,7 @@ const Leads = () => {
         </Card>
       )}
 
-      {/* 📥 MODAL 1: CREATE LEAD */}
+      {/*  MODAL 1: CREATE LEAD */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent className="sm:max-w-[425px] rounded-2xl bg-white p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
           <DialogHeader className="pb-3 border-b border-slate-100 flex flex-row items-center gap-2.5">
@@ -411,7 +411,7 @@ const Leads = () => {
         </DialogContent>
       </Dialog>
 
-      {/* 🛠️ MODAL 2: EDIT LEAD / DETAILS INTEGRATION MATRIX */}
+      {/*  MODAL 2: EDIT LEAD / DETAILS INTEGRATION MATRIX */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="sm:max-w-[620px] rounded-2xl bg-white p-6 shadow-2xl border border-slate-100 max-h-[88vh] overflow-y-auto">
           <DialogHeader className="pb-3 border-b border-slate-100 flex flex-row justify-between items-center gap-4">
@@ -540,7 +540,7 @@ const Leads = () => {
                 </div>
               </form>
 
-              {/* 🟢 INTEGRATED LIVE DATA FEED SUBCOMPONENTS */}
+              {/*  INTEGRATED LIVE DATA FEED SUBCOMPONENTS */}
               
               {/* Notebook Handler */}
               <div className="space-y-2 p-3 bg-slate-50/50 border border-slate-100 rounded-xl">
@@ -564,7 +564,7 @@ const Leads = () => {
         </DialogContent>
       </Dialog>
 
-      {/* ⚡ NESTED ACTION MODAL: TASK CREATION POPUP SYSTEM */}
+      {/*  NESTED ACTION MODAL: TASK CREATION POPUP SYSTEM */}
       {editingLead && (
         <CreateTaskModal 
           isOpen={isTaskModalOpen} 

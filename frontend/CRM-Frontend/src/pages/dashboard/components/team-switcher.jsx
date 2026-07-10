@@ -54,7 +54,7 @@ export function TeamSwitcher({ teams = [] }) {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
 
-          {/* 🛡️ Dropdown Menu Box: Styled using the Light Panel Dashboard Theme */}
+          {/*  Dropdown Menu Box: Styled using the Light Panel Dashboard Theme */}
           {userRole === 'admin' && (
             <DropdownMenuContent
               className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-xl bg-white border border-slate-100 shadow-xl p-1.5 text-slate-700 animate-in fade-in-50 slide-in-from-top-1"
